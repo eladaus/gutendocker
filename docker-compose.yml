@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=gutendex
+      - POSTGRES_USER=gutendex
+      - POSTGRES_PASSWORD=changeme123  # Change this!
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gutendex"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: gunicorn gutendex.wsgi:application --bind 0.0.0.0:8000 --workers 4
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+      - ./catalog_files:/app/catalog_files
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

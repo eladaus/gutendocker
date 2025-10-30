@@ -1,3 +1,4 @@
+# Note: The original requirements.txt from the Gutendex repo
 defusedxml==0.7.1
 Django==4.2.28
 django-cors-headers==4.3.1
@@ -7,3 +8,5 @@ inflection==0.5.1
 psycopg2-binary==2.9.10
 six==1.16.0
 sqlparse>=0.5.0 # not directly required, pinned by Snyk to avoid a vulnerability
+# Add gunicorn for production serving
+gunicorn==21.2.0
