@@ -6,3 +6,5 @@ gutendex/.env
 venv
 
 .env
+staticfiles/
+media/
