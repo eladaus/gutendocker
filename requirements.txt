@@ -10,3 +10,5 @@ six==1.16.0
 sqlparse>=0.5.0 # not directly required, pinned by Snyk to avoid a vulnerability
 # Add gunicorn for production serving
 gunicorn==21.2.0
+# Add whitenoise for serving static files
+whitenoise==6.6.0

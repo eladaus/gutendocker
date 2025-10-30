@@ -21,8 +21,7 @@ db.sqlite3-journal
 .env
 .env.local
 
-# Static and media files
-/static/
+# Static and media files (keep /static/ in image for collectstatic)
 /staticfiles
 /media/
 /catalog_files/

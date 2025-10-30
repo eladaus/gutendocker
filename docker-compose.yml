@@ -17,8 +17,6 @@ services:
     build: .
     command: gunicorn gutendex.wsgi:application --bind 0.0.0.0:8000 --workers 4
     volumes:
-      - ./static:/app/static
-      - ./staticfiles:/app/staticfiles
       - ./media:/app/media
       - ./catalog_files:/app/catalog_files
     ports:
