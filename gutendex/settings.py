@@ -22,6 +22,7 @@ env = environ.Env(
     DEBUG=(bool, False),
     MANAGER_EMAILS=(list, []),
     MANAGER_NAMES=(list, []),
+    SEND_EMAILS=(bool, True),
 )
 environ.Env.read_env()
 
@@ -172,6 +173,12 @@ MANAGERS = [
 
 
 # Email
+# Use console backend if SEND_EMAILS is False (prints to console instead of sending)
+if env('SEND_EMAILS'):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_HOST_ADDRESS = env('EMAIL_HOST_ADDRESS')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
