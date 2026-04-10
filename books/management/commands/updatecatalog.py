@@ -301,24 +301,29 @@ class Command(BaseCommand):
 
             log('  Making temporary directory...')
             if os.path.exists(TEMP_PATH):
-                raise CommandError(
-                    'The temporary path, `' + TEMP_PATH + '`, already exists.'
-                )
-            else:
-                os.makedirs(TEMP_PATH)
+                log('    Temporary path already exists, removing it...')
+                shutil.rmtree(TEMP_PATH)
+            os.makedirs(TEMP_PATH)
 
             log('  Downloading compressed catalog...')
             urllib.request.urlretrieve(URL, DOWNLOAD_PATH)
 
             log('  Decompressing catalog...')
-            if not os.path.exists(DOWNLOAD_PATH):
-                os.makedirs(DOWNLOAD_PATH)
             with open(os.devnull, 'w') as null:
-                call(
-                    ['tar', 'fjvx', DOWNLOAD_PATH, '-C', TEMP_PATH],
+                result = call(
+                    ['tar', '-xjf', DOWNLOAD_PATH, '-C', TEMP_PATH],
                     stdout=null,
                     stderr=null
                 )
+            log(f'    Tar extraction result: {result}')
+
+            # Debug: List what was extracted
+            log('  Contents of TEMP_PATH:')
+            for item in os.listdir(TEMP_PATH):
+                log(f'    - {item}')
+                item_path = os.path.join(TEMP_PATH, item)
+                if os.path.isdir(item_path):
+                    log(f'      (directory, contains: {os.listdir(item_path)[:5]})')
 
             log('  Detecting stale directories...')
             if not os.path.exists(MOVE_TARGET_PATH):
@@ -365,6 +370,7 @@ class Command(BaseCommand):
             error_message = str(error)
             log('Error:', error_message)
             log('')
-            shutil.rmtree(TEMP_PATH)
+            # Don't delete TEMP_PATH on error for debugging
+            # shutil.rmtree(TEMP_PATH)
 
         send_log_email()
